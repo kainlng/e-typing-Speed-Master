@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>e-typing Speed Master Pro</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo">⚡</div>
+        <div>
+          <h1>e-typing Speed Master</h1>
+          <span class="sub">Tự động gõ & Hoàn thành test</span>
+        </div>
+      </div>
+      <div class="status-badge idle" id="pop-status-badge">
+        <span class="dot"></span>
+        <span id="pop-status-text">Sẵn sàng</span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
+      <!-- VÙNG 1: Điều khiển chính -->
+      <section class="sec">
+        <div class="sec-head">
+          <span>Điều khiển</span>
+          <span class="hotkey-tip">Phím tắt: [F8]</span>
+        </div>
+        <div class="btn-group-2">
+          <button class="btn btn-primary" id="pop-btn-start">▶ Bắt đầu (Auto)</button>
+          <button class="btn btn-secondary" id="pop-btn-pause" disabled>⏸ Tạm dừng</button>
+        </div>
+        <div class="btn-group-2" style="margin-top: 6px;">
+          <button class="btn btn-secondary" id="pop-btn-stop" style="font-size: 11px;">⏹ Dừng lại</button>
+          <button class="btn btn-accent" id="pop-btn-space" style="font-size: 11px;">␣ Nhấn Space</button>
+        </div>
+      </section>
+
+      <!-- VÙNG 2: Thiết lập WPM (Tốc độ) -->
+      <section class="sec">
+        <div class="sec-head">
+          <span>Tốc độ gõ (WPM)</span>
+          <span class="highlight" id="pop-cpm-label">600 CPM</span>
+        </div>
+        <div class="range-row">
+          <input type="range" class="slider" id="pop-slider-wpm" min="30" max="600" step="5" value="120">
+          <input type="number" class="num-input" id="pop-input-wpm" min="30" max="600" value="120">
+        </div>
+        <div class="presets">
+          <button class="preset-btn" data-wpm="80">80</button>
+          <button class="preset-btn" data-wpm="150">150</button>
+          <button class="preset-btn" data-wpm="250">250</button>
+          <button class="preset-btn" data-wpm="400">400 (Ninja)</button>
+        </div>
+        <label class="checkbox-row">
+          <input type="checkbox" id="pop-chk-humanize" checked>
+          <span>Nhịp gõ tự nhiên (Humanize ±15%)</span>
+        </label>
+      </section>
+
+      <!-- VÙNG 3: Thiết lập Độ chính xác (Accuracy) -->
+      <section class="sec">
+        <div class="sec-head">
+          <span>Độ chính xác</span>
+          <span class="highlight-green" id="pop-acc-label">98%</span>
+        </div>
+        <div class="range-row">
+          <input type="range" class="slider" id="pop-slider-acc" min="80" max="100" step="1" value="98">
+          <input type="number" class="num-input" id="pop-input-acc" min="80" max="100" value="98">
+        </div>
+        <div class="presets">
+          <button class="preset-btn" data-acc="100">100%</button>
+          <button class="preset-btn" data-acc="98">98%</button>
+          <button class="preset-btn" data-acc="95">95%</button>
+          <button class="preset-btn" data-acc="90">90%</button>
+        </div>
+      </section>
+
+      <!-- VÙNG 4: Thống kê thời gian thực -->
+      <section class="sec">
+        <div class="sec-head">Tiến độ bài test</div>
+        <div class="stats-grid">
+          <div class="stat-cell">
+            <span class="val" id="pop-stat-sentence">0</span>
+            <span class="lbl">Câu</span>
+          </div>
+          <div class="stat-cell">
+            <span class="val" id="pop-stat-chars">0</span>
+            <span class="lbl">Ký tự</span>
+          </div>
+          <div class="stat-cell">
+            <span class="val" id="pop-stat-errors">0</span>
+            <span class="lbl">Lỗi (Miss)</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Hỗ trợ mọi bài test e-typing.ne.jp</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

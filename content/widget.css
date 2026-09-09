@@ -1,0 +1,399 @@
+/* e-typing Speed Master Floating Widget Styles */
+
+#etyping-master-root {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2147483647;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #e2e8f0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+#etyping-master-root * {
+  box-sizing: border-box;
+}
+
+/* Floating Card Container */
+.etm-card {
+  width: 320px;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Header & Drag Handle */
+.etm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: grab;
+}
+
+.etm-header:active {
+  cursor: grabbing;
+}
+
+.etm-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.etm-icon {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border-radius: 6px;
+  font-size: 13px;
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.4);
+}
+
+.etm-title {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  color: #f8fafc;
+}
+
+.etm-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.etm-btn-icon {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.15s ease;
+}
+
+.etm-btn-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+}
+
+/* Main Body */
+.etm-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Common Section Box */
+.etm-section {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.etm-sec-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Vùng 1: Trạng thái & Điều khiển */
+.etm-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.etm-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.etm-badge.idle {
+  background: rgba(100, 116, 139, 0.2);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.etm-badge.waiting {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.etm-badge.typing {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.etm-badge.paused {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.etm-badge.completed {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.etm-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.etm-ctrl-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.etm-btn {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.etm-btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.etm-btn-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.45);
+}
+
+.etm-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.etm-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.etm-btn-accent {
+  background: rgba(245, 130, 32, 0.2);
+  color: #fb923c;
+  border: 1px solid rgba(245, 130, 32, 0.4);
+}
+
+.etm-btn-accent:hover {
+  background: rgba(245, 130, 32, 0.3);
+}
+
+.etm-ctrl-extra {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+/* Vùng 2 & 3: WPM & Accuracy */
+.etm-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.etm-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: #334155;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.etm-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #6366f1;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.etm-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.etm-input-num {
+  width: 58px;
+  padding: 4px 6px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #f8fafc;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+}
+
+.etm-input-num:focus {
+  border-color: #6366f1;
+}
+
+.etm-presets {
+  display: flex;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.etm-preset-btn {
+  flex: 1;
+  padding: 3px 0;
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.etm-preset-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  color: #c7d2fe;
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.etm-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #cbd5e1;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.etm-checkbox-label input {
+  accent-color: #6366f1;
+  cursor: pointer;
+}
+
+/* Vùng 4: Thống kê & Tiến độ */
+.etm-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  text-align: center;
+}
+
+.etm-stat-box {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 6px;
+  padding: 6px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.etm-stat-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.etm-stat-lbl {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.etm-preview-box {
+  margin-top: 8px;
+  padding: 6px 8px;
+  background: rgba(15, 23, 42, 0.7);
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #38bdf8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px dashed rgba(56, 189, 248, 0.2);
+}
+
+/* Collapsed Bubble */
+.etm-bubble {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  padding: 8px 14px;
+  border-radius: 24px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.etm-bubble:hover {
+  transform: scale(1.05);
+}
+
+.etm-bubble-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+}
