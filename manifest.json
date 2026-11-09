@@ -24,6 +24,16 @@
   "host_permissions": [
     "*://*.e-typing.ne.jp/*"
   ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content/hide.css"
+      ],
+      "matches": [
+        "*://*.e-typing.ne.jp/*"
+      ]
+    }
+  ],
   "content_scripts": [
     {
       "matches": [
