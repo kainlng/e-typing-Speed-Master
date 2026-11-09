@@ -6,6 +6,9 @@
 (function() {
   'use strict';
 
+  const RESULT_DETAIL_LABELS = ['WPM', '正タイプ数', '正確さ', '正確率', '入力文字数', 'ミス入力数'];
+  const RESULT_BOX_SELECTOR = '#result, .result, #score_data, #result_data, .result_box, #result_screen';
+
   window.ETypingExtractor = {
     observer: null,
 
@@ -117,6 +120,14 @@
         if (result.fullText) break;
       }
 
+      // Phải kiểm tra trước khi quét sâu: quét sâu sẽ nhận nhầm chữ như "WPM" trên màn hình kết quả thành câu Romaji
+      if (!isHostPage && this.isResultScreenVisible(result.fullText, currentStats)) {
+        result.fullText = '';
+        result.targetElement = null;
+        result.isResultScreen = true;
+        return result;
+      }
+
       // 2. Nếu chưa tìm thấy từ selector chuẩn, quét sâu tất cả container con trong body
       if (!result.fullText && document.body) {
         const candidates = document.querySelectorAll('div, span, p');
@@ -167,27 +178,32 @@
         }
       }
 
-      // 5. KIỂM TRA MÀN HÌNH KẾT THÚC (Result Screen)
-      if (isHostPage) {
-        result.isResultScreen = false;
-        return result;
-      }
-
-      const typedChars = currentStats ? (currentStats.typedChars || 0) : 0;
-      const sentenceIndex = currentStats ? (currentStats.sentenceIndex || 0) : 0;
-
-      // Chỉ kiểm tra màn hình kết thúc nếu ĐÃ gõ ít nhất 5 câu hoặc trên 60 ký tự!
-      if (sentenceIndex >= 5 || typedChars >= 60) {
-        const hasResultBox = !!document.querySelector('#result, .result, #score_data, #result_data, .result_box, #result_screen');
-        const hasScoreText = (bodyText.includes('スコア') || bodyText.includes('Score')) &&
-                             (bodyText.includes('WPM') || bodyText.includes('正タイプ数') || bodyText.includes('正確さ'));
-
-        if ((hasResultBox || hasScoreText) && !result.fullText) {
-          result.isResultScreen = true;
-        }
-      }
-
       return result;
+    },
+
+    /**
+     * Nhận biết màn hình kết quả dựa trên nội dung đang hiển thị, không dựa vào số câu.
+     * Chỉ áp dụng sau khi đã gõ ít nhất một câu, và không bao giờ khi câu hiện tại còn dang dở.
+     */
+    isResultScreenVisible(sentenceText, currentStats) {
+      if (!currentStats || !currentStats.sentenceIndex) return false;
+
+      // Trang kết quả có thể vẫn giữ lại câu cuối cùng trong DOM
+      if (sentenceText) {
+        const isTypedSentence = sentenceText === currentStats.currentSentence &&
+                                currentStats.currentCharIndex >= sentenceText.length;
+        if (!isTypedSentence) return false;
+      }
+
+      const bodyText = document.body ? document.body.innerText : '';
+      const hasScoreLabel = bodyText.includes('スコア') || bodyText.includes('Score');
+      if (hasScoreLabel && RESULT_DETAIL_LABELS.some(label => bodyText.includes(label))) {
+        return true;
+      }
+
+      if (sentenceText) return false;
+      return Array.from(document.querySelectorAll(RESULT_BOX_SELECTOR))
+        .some(el => el.getClientRects().length > 0);
     },
 
     /**

@@ -52,8 +52,7 @@
         accuracy: 98,
         humanize: true,
         autoSpace: true,
-        sentenceDelay: 200,
-        maxSentences: 30
+        sentenceDelay: 200
       };
 
       this.stats = {
@@ -300,6 +299,13 @@
       if (this.isHost) return;
       if (this.state === 'PAUSED') return;
 
+      // Màn hình kết quả là tín hiệu duy nhất để kết thúc bài test
+      if (info.isResultScreen) {
+        console.log('[Game Frame] Hoàn thành bài test!');
+        this.finish();
+        return;
+      }
+
       // 1. Tự động click nút Start trong game nếu có
       if (info.hasStartBtn && info.startBtnElement && this.state === 'WAITING_FOR_START') {
         console.log('[Game Frame] Tự động nhấn nút Start trong game...');
@@ -315,16 +321,7 @@
         return;
       }
 
-      // 3. Màn hình kết thúc (Result Screen)
-      if (info.isResultScreen) {
-        if (this.stats.sentenceIndex >= 5 || this.stats.typedChars >= 60) {
-          console.log('[Game Frame] Hoàn thành bài test!');
-          this.finish();
-          return;
-        }
-      }
-
-      // 4. Màn hình chờ bấm Space ("スペースキー")
+      // 3. Màn hình chờ bấm Space ("スペースキー")
       if (info.isPromptScreen) {
         this.setState('WAITING_FOR_START');
         if (this.config.autoSpace) {
@@ -339,13 +336,6 @@
     }
 
     startNewSentence(sentenceText) {
-      // Câu mới có thể xuất hiện ngay sau phím cuối của câu cuối cùng
-      if (this.stats.sentenceIndex >= this.config.maxSentences) {
-        console.log(`[Game Frame] Đã gõ đủ ${this.config.maxSentences} câu, tự động dừng.`);
-        this.finish();
-        return;
-      }
-
       clearTimeout(this.typingTimer);
       this.currentSentenceText = sentenceText;
       this.stats.currentSentence = sentenceText;
@@ -372,11 +362,6 @@
       // Đã gõ xong câu hiện tại -> chuyển trạng thái chờ đổi câu
       if (!sentence || index >= sentence.length) {
         console.log('[Game Frame] Hoàn thành câu:', sentence);
-        if (this.stats.sentenceIndex >= this.config.maxSentences) {
-          console.log(`[Game Frame] Đã gõ đủ ${this.config.maxSentences} câu, tự động dừng.`);
-          this.finish();
-          return;
-        }
         this.setState('BETWEEN_SENTENCES');
         return;
       }
