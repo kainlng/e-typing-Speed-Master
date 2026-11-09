@@ -48,7 +48,8 @@
         "content/engine.js",
         "content/widget.js",
         "content/content.js",
-        "content/hotkey.js"
+        "content/hotkey.js",
+        "content/keyboard.js"
       ],
       "run_at": "document_end",
       "all_frames": true
