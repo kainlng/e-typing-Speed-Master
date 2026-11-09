@@ -40,6 +40,8 @@
 
   const isHostWindow = (window.top === window && !document.getElementById('sentenceText') && !location.pathname.includes('/app/'));
 
+  const HIDE_STYLE_ID = 'etyping-master-hide-style';
+
   class TypingEngine {
     constructor() {
       this.isHost = isHostWindow;
@@ -50,7 +52,8 @@
         accuracy: 98,
         humanize: true,
         autoSpace: true,
-        sentenceDelay: 200
+        sentenceDelay: 200,
+        maxSentences: 30
       };
 
       this.stats = {
@@ -102,7 +105,37 @@
       if (this.state === newState) return;
       console.log(`[e-typing Engine] Trạng thái: ${this.state} -> ${newState}`);
       this.state = newState;
+      this.updateHideStyle();
       this.notify('stateChange', newState);
+    }
+
+    // hide.css chỉ được bật trong lúc tool đang chạy auto typing
+    updateHideStyle() {
+      if (this.isHost) return;
+
+      const shouldHide = this.state !== 'IDLE' && this.state !== 'COMPLETED';
+      const existing = document.getElementById(HIDE_STYLE_ID);
+
+      if (shouldHide && !existing) {
+        const link = document.createElement('link');
+        link.id = HIDE_STYLE_ID;
+        link.rel = 'stylesheet';
+        link.href = chrome.runtime.getURL('content/hide.css');
+        document.head.appendChild(link);
+      } else if (!shouldHide && existing) {
+        existing.remove();
+      }
+    }
+
+    // Kết thúc lượt chạy: ngừng theo dõi DOM để không tự gõ tiếp câu mới
+    finish() {
+      clearTimeout(this.typingTimer);
+      if (this.stopObserving) {
+        this.stopObserving();
+        this.stopObserving = null;
+      }
+      this.currentSentenceText = '';
+      this.setState('COMPLETED');
     }
 
     updateConfig(newConfig) {
@@ -286,8 +319,7 @@
       if (info.isResultScreen) {
         if (this.stats.sentenceIndex >= 5 || this.stats.typedChars >= 60) {
           console.log('[Game Frame] Hoàn thành bài test!');
-          clearTimeout(this.typingTimer);
-          this.setState('COMPLETED');
+          this.finish();
           return;
         }
       }
@@ -307,6 +339,13 @@
     }
 
     startNewSentence(sentenceText) {
+      // Câu mới có thể xuất hiện ngay sau phím cuối của câu cuối cùng
+      if (this.stats.sentenceIndex >= this.config.maxSentences) {
+        console.log(`[Game Frame] Đã gõ đủ ${this.config.maxSentences} câu, tự động dừng.`);
+        this.finish();
+        return;
+      }
+
       clearTimeout(this.typingTimer);
       this.currentSentenceText = sentenceText;
       this.stats.currentSentence = sentenceText;
@@ -333,6 +372,11 @@
       // Đã gõ xong câu hiện tại -> chuyển trạng thái chờ đổi câu
       if (!sentence || index >= sentence.length) {
         console.log('[Game Frame] Hoàn thành câu:', sentence);
+        if (this.stats.sentenceIndex >= this.config.maxSentences) {
+          console.log(`[Game Frame] Đã gõ đủ ${this.config.maxSentences} câu, tự động dừng.`);
+          this.finish();
+          return;
+        }
         this.setState('BETWEEN_SENTENCES');
         return;
       }

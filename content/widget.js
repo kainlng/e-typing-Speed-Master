@@ -15,7 +15,7 @@
     root.id = 'etyping-master-root';
 
     root.innerHTML = `
-      <div class="etm-card" id="etm-card">
+      <div class="etm-card" id="etm-card" style="display:none;">
         <!-- Header -->
         <div class="etm-header" id="etm-drag-handle">
           <div class="etm-title-wrap">
@@ -114,9 +114,8 @@
       </div>
 
       <!-- Collapsed Bubble -->
-      <div class="etm-bubble" id="etm-bubble" title="Bấm để mở rộng bảng điều khiển">
-        <span class="etm-bubble-dot"></span>
-        <span>⚡ e-typing Bot</span>
+      <div class="etm-bubble" id="etm-bubble" style='display: inline-flex;'>
+        <span>-</span>
       </div>
     `;
 
@@ -272,6 +271,7 @@
     });
 
     // Hotkey F8
+    /*
     window.addEventListener('keydown', (e) => {
       if (e.key === 'F8' || (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x'))) {
         e.preventDefault();
@@ -285,6 +285,7 @@
         }
       }
     });
+    */ 
 
     // Cập nhật giao diện khi Engine đổi trạng thái
     if (window.ETypingEngine) {
@@ -400,9 +401,11 @@
     loadSettings();
   }
 
+ //Prevent pop-up widget when access web
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initWidget);
   } else {
     initWidget();
   }
-})();
+}
+)();

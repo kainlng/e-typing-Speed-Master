@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "e-typing Speed Master Pro",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Auto typing tool cho e-typing.ne.jp: Tự động trích xuất Romaji, dispatch phím, tùy chỉnh WPM và độ chính xác linh hoạt.",
   "icons": {
     "16": "assets/icons/icon16.png",
@@ -24,6 +24,16 @@
   "host_permissions": [
     "*://*.e-typing.ne.jp/*"
   ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content/hide.css"
+      ],
+      "matches": [
+        "*://*.e-typing.ne.jp/*"
+      ]
+    }
+  ],
   "content_scripts": [
     {
       "matches": [
@@ -37,7 +47,9 @@
         "content/extractor.js",
         "content/engine.js",
         "content/widget.js",
-        "content/content.js"
+        "content/content.js",
+        "content/hotkey.js",
+        "content/keyboard.js"
       ],
       "run_at": "document_end",
       "all_frames": true
