@@ -42,6 +42,8 @@
 
   const HIDE_STYLE_ID = 'etyping-master-hide-style';
 
+  const ACTIVE_RUN_STATES = ['WAITING_FOR_START', 'TYPING', 'BETWEEN_SENTENCES', 'PAUSED'];
+
   class TypingEngine {
     constructor() {
       this.isHost = isHostWindow;
@@ -52,8 +54,7 @@
         accuracy: 98,
         humanize: true,
         autoSpace: true,
-        sentenceDelay: 200,
-        maxSentences: 30
+        sentenceDelay: 200
       };
 
       this.stats = {
@@ -197,14 +198,16 @@
         if (this.hostPingInterval) clearInterval(this.hostPingInterval);
         let pings = 0;
         const sendStart = () => {
-          if (window.ETypingSendCommand) {
-            window.ETypingSendCommand('START', this.config);
-          }
-          pings++;
-          if (pings > 12 || this.state === 'TYPING') {
+          // Kiểm tra trước khi gửi: Game Frame đã chạy thì không gửi thêm START
+          if (pings > 12 || this.state !== 'WAITING_FOR_START') {
             clearInterval(this.hostPingInterval);
             this.hostPingInterval = null;
+            return;
           }
+          if (window.ETypingSendCommand) {
+            window.ETypingSendCommand('START');
+          }
+          pings++;
         };
 
         sendStart();
@@ -213,6 +216,9 @@
       }
 
       // TRƯỜNG HỢP 2: Chạy trực tiếp tại Game Frame
+      // START có thể đến nhiều lần (gọi trực tiếp, postMessage, popup); chỉ lần đầu mới khởi động
+      if (ACTIVE_RUN_STATES.includes(this.state)) return;
+
       this.stats.startTime = Date.now();
       this.stats.typedChars = 0;
       this.stats.errorsCount = 0;
@@ -300,6 +306,13 @@
       if (this.isHost) return;
       if (this.state === 'PAUSED') return;
 
+      // Màn hình kết quả là tín hiệu duy nhất để kết thúc bài test
+      if (info.isResultScreen) {
+        console.log('[Game Frame] Hoàn thành bài test!');
+        this.finish();
+        return;
+      }
+
       // 1. Tự động click nút Start trong game nếu có
       if (info.hasStartBtn && info.startBtnElement && this.state === 'WAITING_FOR_START') {
         console.log('[Game Frame] Tự động nhấn nút Start trong game...');
@@ -315,16 +328,7 @@
         return;
       }
 
-      // 3. Màn hình kết thúc (Result Screen)
-      if (info.isResultScreen) {
-        if (this.stats.sentenceIndex >= 5 || this.stats.typedChars >= 60) {
-          console.log('[Game Frame] Hoàn thành bài test!');
-          this.finish();
-          return;
-        }
-      }
-
-      // 4. Màn hình chờ bấm Space ("スペースキー")
+      // 3. Màn hình chờ bấm Space ("スペースキー")
       if (info.isPromptScreen) {
         this.setState('WAITING_FOR_START');
         if (this.config.autoSpace) {
@@ -339,13 +343,6 @@
     }
 
     startNewSentence(sentenceText) {
-      // Câu mới có thể xuất hiện ngay sau phím cuối của câu cuối cùng
-      if (this.stats.sentenceIndex >= this.config.maxSentences) {
-        console.log(`[Game Frame] Đã gõ đủ ${this.config.maxSentences} câu, tự động dừng.`);
-        this.finish();
-        return;
-      }
-
       clearTimeout(this.typingTimer);
       this.currentSentenceText = sentenceText;
       this.stats.currentSentence = sentenceText;
@@ -372,18 +369,15 @@
       // Đã gõ xong câu hiện tại -> chuyển trạng thái chờ đổi câu
       if (!sentence || index >= sentence.length) {
         console.log('[Game Frame] Hoàn thành câu:', sentence);
-        if (this.stats.sentenceIndex >= this.config.maxSentences) {
-          console.log(`[Game Frame] Đã gõ đủ ${this.config.maxSentences} câu, tự động dừng.`);
-          this.finish();
-          return;
-        }
         this.setState('BETWEEN_SENTENCES');
         return;
       }
 
       const correctChar = sentence[index];
       const accuracy = Math.max(80, Math.min(100, this.config.accuracy));
-      const shouldMakeTypo = accuracy < 100 && (Math.random() * 100 > accuracy);
+      // Mỗi ký tự có tối đa 1 lỗi, nên độ chính xác = 1 / (1 + p) => p = (100 - A) / A
+      const typoProbability = (100 - accuracy) / accuracy;
+      const shouldMakeTypo = Math.random() < typoProbability;
       const delay = this.getDelayBetweenChars(correctChar);
 
       if (shouldMakeTypo) {

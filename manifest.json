@@ -39,16 +39,13 @@
       "matches": [
         "*://*.e-typing.ne.jp/*"
       ],
-      "css": [
-        "content/widget.css"
-      ],
       "js": [
         "content/dispatcher.js",
         "content/extractor.js",
         "content/engine.js",
-        "content/widget.js",
         "content/content.js",
         "content/hotkey.js",
+        "content/settings.js",
         "content/keyboard.js"
       ],
       "run_at": "document_end",
