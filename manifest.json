@@ -44,7 +44,8 @@
         "content/extractor.js",
         "content/engine.js",
         "content/content.js",
-        "content/hotkey.js"
+        "content/hotkey.js",
+        "content/settings.js"
       ],
       "run_at": "document_end",
       "all_frames": true
