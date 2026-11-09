@@ -114,9 +114,8 @@
       </div>
 
       <!-- Collapsed Bubble -->
-      <div class="etm-bubble" id="etm-bubble" title="Bấm để mở rộng bảng điều khiển">
-        <span class="etm-bubble-dot"></span>
-        <span>⚡ e-typing Bot</span>
+      <div class="etm-bubble" id="etm-bubble" >
+        <span>-</span>
       </div>
     `;
 
