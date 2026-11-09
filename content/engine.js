@@ -42,8 +42,6 @@
 
   const HIDE_STYLE_ID = 'etyping-master-hide-style';
 
-  const ACTIVE_RUN_STATES = ['WAITING_FOR_START', 'TYPING', 'BETWEEN_SENTENCES', 'PAUSED'];
-
   class TypingEngine {
     constructor() {
       this.isHost = isHostWindow;
@@ -199,16 +197,14 @@
         if (this.hostPingInterval) clearInterval(this.hostPingInterval);
         let pings = 0;
         const sendStart = () => {
-          // Kiểm tra trước khi gửi: Game Frame đã chạy thì không gửi thêm START
-          if (pings > 12 || this.state !== 'WAITING_FOR_START') {
-            clearInterval(this.hostPingInterval);
-            this.hostPingInterval = null;
-            return;
-          }
           if (window.ETypingSendCommand) {
-            window.ETypingSendCommand('START');
+            window.ETypingSendCommand('START', this.config);
           }
           pings++;
+          if (pings > 12 || this.state === 'TYPING') {
+            clearInterval(this.hostPingInterval);
+            this.hostPingInterval = null;
+          }
         };
 
         sendStart();
@@ -217,9 +213,6 @@
       }
 
       // TRƯỜNG HỢP 2: Chạy trực tiếp tại Game Frame
-      // START có thể đến nhiều lần (gọi trực tiếp, postMessage, popup); chỉ lần đầu mới khởi động
-      if (ACTIVE_RUN_STATES.includes(this.state)) return;
-
       this.stats.startTime = Date.now();
       this.stats.typedChars = 0;
       this.stats.errorsCount = 0;
@@ -390,9 +383,7 @@
 
       const correctChar = sentence[index];
       const accuracy = Math.max(80, Math.min(100, this.config.accuracy));
-      // Mỗi ký tự có tối đa 1 lỗi, nên độ chính xác = 1 / (1 + p) => p = (100 - A) / A
-      const typoProbability = (100 - accuracy) / accuracy;
-      const shouldMakeTypo = Math.random() < typoProbability;
+      const shouldMakeTypo = accuracy < 100 && (Math.random() * 100 > accuracy);
       const delay = this.getDelayBetweenChars(correctChar);
 
       if (shouldMakeTypo) {

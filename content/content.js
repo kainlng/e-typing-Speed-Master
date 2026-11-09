@@ -74,13 +74,6 @@
         return true;
       }
 
-      // updateConfig tự chuyển tiếp xuống iframe nếu là Host, nên Host luôn giữ cấu hình mới nhất
-      if (action === 'UPDATE_CONFIG') {
-        if (config && window.ETypingEngine) window.ETypingEngine.updateConfig(config);
-        sendResponse({ success: true });
-        return true;
-      }
-
       // Gửi lệnh tới iframe hoặc chạy engine cục bộ
       const sent = window.ETypingSendCommand(action, config);
       if (!sent && window.ETypingEngine) {
@@ -90,6 +83,7 @@
           case 'RESUME': window.ETypingEngine.resume(); break;
           case 'STOP': window.ETypingEngine.stop(); break;
           case 'PRESS_SPACE': window.ETypingEngine.pressSpace(); break;
+          case 'UPDATE_CONFIG': if (config) window.ETypingEngine.updateConfig(config); break;
         }
       }
 

@@ -46,7 +46,6 @@
         "content/dispatcher.js",
         "content/extractor.js",
         "content/engine.js",
-        "content/settings.js",
         "content/widget.js",
         "content/content.js",
         "content/hotkey.js"
