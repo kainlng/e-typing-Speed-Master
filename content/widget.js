@@ -271,6 +271,7 @@
     });
 
     // Hotkey F8
+    /*
     window.addEventListener('keydown', (e) => {
       if (e.key === 'F8' || (e.ctrlKey && e.shiftKey && (e.key === 'X' || e.key === 'x'))) {
         e.preventDefault();
@@ -284,6 +285,7 @@
         }
       }
     });
+    */ 
 
     // Cập nhật giao diện khi Engine đổi trạng thái
     if (window.ETypingEngine) {
