@@ -15,7 +15,7 @@
     root.id = 'etyping-master-root';
 
     root.innerHTML = `
-      <div class="etm-card" id="etm-card">
+      <div class="etm-card" id="etm-card" style="display:none;">
         <!-- Header -->
         <div class="etm-header" id="etm-drag-handle">
           <div class="etm-title-wrap">
@@ -114,7 +114,7 @@
       </div>
 
       <!-- Collapsed Bubble -->
-      <div class="etm-bubble" id="etm-bubble" >
+      <div class="etm-bubble" id="etm-bubble" style='display: inline-flex;'>
         <span>-</span>
       </div>
     `;
@@ -401,9 +401,11 @@
     loadSettings();
   }
 
+ //Prevent pop-up widget when access web
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initWidget);
   } else {
     initWidget();
   }
-})();
+}
+)();
