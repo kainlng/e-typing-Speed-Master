@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "e-typing Speed Master Pro",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Auto typing tool cho e-typing.ne.jp: Tự động trích xuất Romaji, dispatch phím, tùy chỉnh WPM và độ chính xác linh hoạt.",
   "icons": {
     "16": "assets/icons/icon16.png",
